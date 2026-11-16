@@ -1,0 +1,56 @@
+#include<iostream>
+#include<climits> // for INT_MIN
+using namespace std;
+struct Node 
+{
+    int data;
+    Node * left, * right;
+    Node(int data)
+    {
+        this -> data = data;
+        left = right = nullptr;
+    }
+};
+Node * buildTree()
+{
+    int val;
+    cin >> val;
+
+    if(val == -1)
+        return nullptr;
+
+    Node * root = new Node(val);
+
+    root -> left = buildTree();
+    root -> right = buildTree();
+
+    return root;
+}
+
+//  -------------------- MaxPathSum() -------------------
+int maxPathSum(Node * root, int & maxSum)
+{
+    if(root == nullptr)
+        return 0;
+
+    int left = MaxPathSum(root -> left, maxSum);
+    int right = MaxPathSum(root -> right, maxSum);
+
+    int sum = root -> data + left + right;
+    maxSum = max(maxSum, sum);
+    
+    return root -> data + max(left, right);
+}
+
+// ------------------------ main() --------------------------
+int main()
+{
+    Node * root = buildTree();
+
+    int maxSum = INT_MIN;    // INT_MIN means shortest possible value of int. Why needed? The reason is that it is possible that tree has all the negative values, so in that case all get the possible maximum value. 
+    maxPathSum(root, maxSum);
+
+    cout << "The Maximum path sum is: " << maxSum;
+
+    return 0;
+}
